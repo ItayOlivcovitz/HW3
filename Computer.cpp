@@ -8,7 +8,6 @@ Computer::Computer(const int price, const std::string manufacturer, const std::s
 {
 	
 }
-
 //set cpu name
 void Computer::setCpu(const std::string cpu)
 {

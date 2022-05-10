@@ -23,7 +23,6 @@ public:
 
 	//casting operator (to string)
 	operator std::string() const;
-
 	//destractor
 	~Computer();
 };

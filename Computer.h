@@ -7,7 +7,7 @@ class Computer : public Item
 public:
 	//constractor
 	Computer(const int price, const std::string manufacturer, const std::string cpu,const bool isLaptop);
-	
+
 	//set cpu name
 	void setCpu(const std::string cpu);
 	

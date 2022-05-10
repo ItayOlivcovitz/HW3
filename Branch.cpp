@@ -32,11 +32,10 @@ int Branch:: howManyItems()const
 }
 
 // add item to the catalog
-void Branch::addItem(const Item* item)
+void Branch::addItem( Item* item)
 {
 	int index = store();
-	
-	this->m_item_Catalog[index] = item->clone();
+	this->m_item_Catalog[index] = item;
 	this->m_capacity++;
 }
 

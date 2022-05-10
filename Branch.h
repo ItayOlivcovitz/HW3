@@ -18,7 +18,7 @@ public:
 	Branch(std::string location);
 
 	//addItem to Item catalog
-	void addItem(const Item * item);
+	void addItem( Item * item);
 
 	//return item catalog
 	Item** getCatalog(int & num) ;

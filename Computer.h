@@ -5,6 +5,7 @@ class Computer : public Item
 	std::string m_cpu ;
 	bool m_isLaptop;
 public:
+
 	//constractor
 	Computer(const int price, const std::string manufacturer, const std::string cpu,const bool isLaptop);
 

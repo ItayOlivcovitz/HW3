@@ -3,7 +3,14 @@
 
 int Item::itemCounter = 0;
 
-Item::Item() : id(++itemCounter) { }
+Item::Item() : id(++itemCounter) ,price(0) { }
+
+// new constractor
+Item::Item(int price, std::string manufacturer)
+    : id(++itemCounter) ,price(price), manufacturer(manufacturer)
+{
+
+}
 
 int Item::getId () const
 {

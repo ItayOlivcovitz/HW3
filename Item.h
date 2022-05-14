@@ -22,6 +22,10 @@ public:
 
     Item();
 
+    //add constractor - for creating new keyboard , mouse , computer 
+    // i think we dont need default constractor for Item
+    Item(int price , string manufacturer);
+
     int getId() const;
 
     int getPrice() const;

@@ -1,29 +1,70 @@
-#pragma once
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
+
+#ifndef COMPUTER_H
+#define COMPUTER_H
+
 #include "Item.h"
+#include <string>
+#include <iostream>
+
+using std::string;
+using std::to_string;
+
 class Computer : public Item
 {
-	std::string m_cpu ;
-	bool m_isLaptop;
+private:
+	string cpu ;
+	bool isLaptop;
+
 public:
 
-	//constractor
-	Computer(const int price, const std::string manufacturer, const std::string cpu,const bool isLaptop);
+	/**
+	 * @brief Construct a new Computer object.
+	 * 
+	 * @param price - computer's price
+	 * @param manufacturer - computer's brand
+	 * @param cpu - computer's cpu brand
+	 * @param isLaptop - is laptop / desktop
+	 */
+	Computer(const int price, const string& manufacturer, const string& cpu, const bool isLaptop);
 
-	//set cpu name
-	void setCpu(const std::string cpu);
+	/**
+	 * @brief Set computer's CPU.
+	 * 
+	 * @param cpu - cpu's brand
+	 */
+	void setCpu(const string& cpu);
 	
-	//return cpu
-	std::string getCpu() const;
+	/**
+	 * @brief Get computer's cpu
+	 * 
+	 * @return string - cpu's brand
+	 */
+	string getCpu() const;
 
-	//set if laptop -T\F
+	/**
+	 * @brief Set if the computer is laptop ot not
+	 * 
+	 * @param isLaptop - True if laptop
+	 */
 	void setIsLaptop(const bool isLaptop);
 
-	//return is laptop
+	/**
+	 * @brief Return true if the computer is laptop
+	 * 
+	 * @return true if laptop
+	 * @return false if desktop
+	 */
 	bool getIsLaptop() const;
 
-	//casting operator (to string)
-	operator std::string() const;
+	/**
+	 * @brief Return string representing the computer
+	 * 
+	 * @return string
+	 */
+	operator string() const override;
 
-	//destractor
-	~Computer();
 };
+
+#endif /* COMPUTER_H */

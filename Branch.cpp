@@ -1,68 +1,98 @@
-#include <iostream>
-#include "Branch.h"
-#include "Item.h"
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
 
-//constractor
-Branch::Branch(std::string location)
-	: m_location(location),m_capacity(0)
+#include "Branch.h"
+
+/**
+ * @brief Construct a new Branch object
+ * 
+ * @param location of Branch
+ */
+Branch::Branch(const string& location)
+	: location(location), capacity(0)
 {
-	this->m_item_Catalog = new Item * [STORE_SIZE];
+	// Allocate array to store the items
+	this->itemCatalog = new Item* [STORE_SIZE];
 }
 
-//check the index for the next item
-int Branch:: store() 
+// Check the index for the next item
+int Branch::nextItemIndex() const
 {
-	if (this->m_capacity >= STORE_SIZE)
+	if (this->capacity >= STORE_SIZE)
 	{
-		delete this->m_item_Catalog[m_capacity % 10];
-		return m_capacity % 10;
-
+		// In Case more items added then branch can store
+		delete this->itemCatalog[capacity % 10];
+		return capacity % 10;
 	}
-	return this->m_capacity;
+
+	return this->capacity;
 } 
 
-//return how many items in the catalog
-int Branch:: howManyItems()const
+// Return how many items in the catalog
+int Branch::howManyItems() const
 {
-	if (this->m_capacity >= STORE_SIZE)
+	// Capacity stores how many items added - not how many are stored
+	if (this->capacity >= STORE_SIZE)
 	{
 		return STORE_SIZE;
 	}
-	return this->m_capacity;
+	
+	return this->capacity;
 }
 
-// add item to the catalog
-void Branch::addItem( Item* item)
+/**
+ * @brief Add item to the branch.
+ * 
+ * @param item - item to be added
+ */
+void Branch::addItem(Item* item)
 {
-	int index = store();
-	this->m_item_Catalog[index] = item;
-	this->m_capacity++;
+	// Stores item
+	this->itemCatalog[nextItemIndex()] = item;
+	this->capacity++;
 }
 
-// return the catalog
-Item** Branch::getCatalog(int &num)  
+/**
+ * @brief Get array for Item pointers inside this branch.
+ * 
+ * @param num - how much items int returned array
+ * @return Item** - array of brunch items
+ */
+Item** Branch::getCatalog(int &size)  
 {
-	num = howManyItems();
-	return this->m_item_Catalog;
+	// Checge 'size' in calling method
+	size = howManyItems();
+	return this->itemCatalog;
 }
 
-//set location
-void Branch::setLocation(const std::string location)
+/**
+ * @brief Set the brunch location.
+ * 
+ * @param location - new location to set
+ */
+void Branch::setLocation(const string& location)
 {
-	this->m_location = location;
+	this->location = location;
 }
-//return location
+
+/**
+ * @brief Get the brunch location
+ * 
+ * @return std::string - brunch's location
+ */
 std::string Branch::getLocation() const
 {
-	return this->m_location;
+	return this->location;
 }
 
-//destractor
+// Destractor
 Branch::~Branch()
 {
 	int length = howManyItems();
+	
+	// Free items iside branch
 	for (int i = 0; i < length; i++)
 	{
-		delete this->m_item_Catalog[i];
+		delete this->itemCatalog[i];
 	}
 }

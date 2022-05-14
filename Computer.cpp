@@ -1,66 +1,77 @@
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
+
 #include <iostream>
 #include "Computer.h"
 #include "Item.h"
 
-//constractor
-Computer::Computer(const int price, const std::string manufacturer, const std::string cpu, const bool isLaptop)
-	:m_cpu(cpu) , m_isLaptop(isLaptop), Item(price, manufacturer)
+/**
+ * @brief Construct a new Computer object.
+ * 
+ * @param price - computer's price
+ * @param manufacturer - computer's brand
+ * @param cpu - computer's cpu brand
+ * @param isLaptop - is laptop / desktop
+ */
+Computer::Computer(const int price, const string& manufacturer, const string& cpu, const bool isLaptop)
+	: Item(price, manufacturer), cpu(cpu), isLaptop(isLaptop)
+{}
+
+/**
+ * @brief Set computer's CPU.
+ * 
+ * @param cpu - cpu's brand
+ */
+void Computer::setCpu(const string& cpu)
 {
-	
+	this->cpu = cpu;
 }
 
-//set cpu name
-void Computer::setCpu(const std::string cpu)
+/**
+ * @brief Get computer's cpu
+ * 
+ * @return string - cpu's brand
+ */
+string Computer::getCpu() const
 {
-	this->m_cpu = cpu;
+	return this->cpu;
 }
 
-//return cpu
-std::string Computer::getCpu() const
-{
-	return this->m_cpu;
-}
-
-//set if laptop -T\F
+/**
+ * @brief Set if the computer is laptop ot not
+ * 
+ * @param isLaptop - True if laptop
+ */
 void Computer::setIsLaptop(const bool isLaptop)
 {
-	this->m_isLaptop = isLaptop;
+	this->isLaptop = isLaptop;
 }
 
-// return is laptop
+/**
+ * @brief Return true if the computer is laptop
+ * 
+ * @return true if laptop
+ * @return false if desktop
+ */
 bool Computer::getIsLaptop() const
 {
-	return this->m_isLaptop;
+	return this->isLaptop;
 }
 
-//casting operator (to string)
+/**
+ * @brief Return string representing the computer
+ * 
+ * @return string
+ */
 Computer::operator std::string() const
 {
-	std::string s_item;
-	std::string s_isLaptop;
-	std::string s_cpu;
+	string s_isLaptop;
+	string s_cpu;
 
-	if (this->getIsLaptop() == true)
-	{
-		s_isLaptop = "Laptop, ";
-	}
-	else
-	{
-		s_isLaptop = "Desktop, ";
-	}
-
+	s_isLaptop = (isLaptop) ? "Laptop" : "Desktop";
 	s_cpu = this->getCpu();
-	s_item = Item::operator std::string();
-	
 
-	//d 1: Dell 70$, Laptop, Intel
-
-
-	return s_item + s_isLaptop+ s_cpu;
+	// Append to the original Item's string
+	return Item::operator string() + ", " + s_isLaptop + ", " + s_cpu;
 }
 
-//destractor
-Computer::~Computer()
-{
-
-}

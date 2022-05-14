@@ -1,71 +1,61 @@
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
+
 #include "Mouse.h"
-#include "Computer.h"
-#include <string>
-#include "PeripheralDevice.h"
 
-//constractor
-Mouse::Mouse(const int price, const std::string manufacturer, const std::string color, const bool isWireless, const int dpi)
-	:m_dpi(dpi), PeripheralDevice(color, isWireless,price,manufacturer)
-{
-	
-}
+/**
+ * @brief Construct a new Mouse object.
+ * 
+ * @param price - mouse price
+ * @param manufacturer - mouse brand
+ * @param color - mouse color
+ * @param isWireless - is wireless mouse
+ * @param dpi - mouse dpi
+ */
+Mouse::Mouse(const int price, const string& manufacturer, const string& color, const bool isWireless, const int dpi)
+	: PeripheralDevice(price, manufacturer, color, isWireless), dpi(dpi)
+{}
 
-//set dpi
+/**
+ * @brief Set mouse DPI.
+ * 
+ * @param dpi
+ */
 void Mouse::setDpi(const int dpi)
 {
-	this->m_dpi = dpi;
+	this->dpi = dpi;
 }
 
-//return dpi
+/**
+ * @brief Get mouse DPI.
+ * 
+ * @return int
+ */
 int Mouse::getDpi() const
 {
-	return this->m_dpi;
+	return this->dpi;
 }
 
-//casting operator (to string)
-Mouse::operator std::string() const
+/**
+ * @brief Return string representing the mouse.
+ * 
+ * @return string 
+ */
+Mouse::operator string() const
 {
-	std::string s_item;
-	std::string s_isWireless;
-    std::string s_color  ;
-	std::string s_dpi;
+	string s_dpi = "Mouse with dpi : " + to_string(this->getDpi());
 
-	if (this->getIsWireless() == true)
-	{
-		s_isWireless = "Wireless, ";
-	}
-	else
-	{
-		s_isWireless = "Wired, ";
-	}
-	s_item = Item::operator std::string();
-	s_color = this->getColor() + ", ";
-	s_dpi   = "Mouse with dpi : " + std::to_string(this->getDpi());
-	//id 3: Pilot 5$, Wireless, Red, Mouse with dpi : 100
-
-
-	return s_item + s_isWireless + s_color + s_dpi;
+	return PeripheralDevice::operator string() + ", " + s_dpi;
 }
 
-//print to with computer the mouse is connected to
+/**
+ * @brief Print 'connecting to computer' message.
+ * 
+ * @param computer - to connect to
+ */
 void Mouse::connect(const Computer& computer) const
 {
-	std::string s_connecting_item;
-	std::string s_mouse_info;
-	std::string s_computer_info;
-
-	s_connecting_item = "Connecting a mouse";
-	std::cout << s_connecting_item << std::endl;
-
-	s_mouse_info = std::string(*this);
-	s_computer_info = std::string(computer);
-	std::cout << s_mouse_info << " is Connecting to computer: " << s_computer_info << std::endl;
-
+	cout << "Connecting a mouse" << endl;
+	PeripheralDevice::connect (computer);
 }
 
-//destractor
-Mouse::~Mouse()
-{
-	
-}
-  

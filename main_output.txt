@@ -1,0 +1,21 @@
+Printing KSF branch in Haifa
+There are 4 item in the catalog
+id 1: Dell 70$, Laptop, Intel
+id 2: Apple 100$, Desktop, AMD
+id 3: Pilot 5$, Wireless, Red, Mouse with dpi : 100
+id 4: Casio 10$, Wired, Silver, Keyboard with 26 keys
+Connecting a keyboard
+id 5: Sasio 20$, Wireless, Gold, Keyboard with 24 keys is Connecting to computer: id 7: Maple 120$, Laptop, AMD
+Connecting a mouse
+id 6: Goldline 10$, Wired, White, Mouse with dpi : 1000 is Connecting to computer: id 7: Maple 120$, Laptop, AMD
+Printing KSF branch in Tel Aviv-Yafo
+There are 2 item in the catalog
+id 5: Sasio 20$, Wireless, Gold, Keyboard with 24 keys
+id 7: Maple 120$, Laptop, AMD
+Throwing away an item
+Throwing away an item
+Throwing away an item
+Throwing away an item
+Throwing away an item
+Throwing away an item
+Throwing away an item

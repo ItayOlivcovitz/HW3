@@ -1,3 +1,5 @@
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
 
 #ifndef ITEM_H
 #define ITEM_H
@@ -6,11 +8,13 @@
 #include <iostream>
 
 using std::string;
+using std::to_string;
 
-class Item {
-
+class Item
+{
 private:
-    static int itemCounter;
+    // the next ID to give to new item
+    static int nextItemId;
 
 protected:
     const int id;
@@ -19,26 +23,59 @@ protected:
     string manufacturer;
 
 public:
+    
+    /**
+     * @brief Construct a new Item object.
+     * 
+     * @param price - Item's price
+     * @param manufacturer - Item's manufacturer
+     */
+    Item(const int price, const string& manufacturer);
 
-    Item();
-
-    //add constractor - for creating new keyboard , mouse , computer 
-    // i think we dont need default constractor for Item
-    Item(int price , string manufacturer);
-
+    /**
+     * @brief Get item's ID.
+     * 
+     * @return int - ID
+     */
     int getId() const;
 
+    /**
+     * @brief Get item's price.
+     * 
+     * @return int - item's price
+     */
     int getPrice() const;
-    void setPrice(int price);
 
-    const string& getManufacturer() const;
+    /**
+     * @brief Set item's price.
+     * 
+     * @param price - new item's price
+     */
+    void setPrice(const int price);
+
+    /**
+     * @brief Get item's manufacturer.
+     * 
+     * @return return item's manufacturer
+     */
+    string getManufacturer() const;
+
+    /**
+     * @brief Set item's manufacturer.
+     * 
+     * @param manufacturer - string representing the manufacturer
+     */
     void setManufacturer(const string& manufacturer);
 
-    // TODO : Set = 0 - for abstruct class
-    virtual operator string() const;
+    /**
+     * @brief Return string representing the item.
+     * 
+     * @return string
+     */
+    virtual operator string() const = 0;
 
+    // Destructor
     virtual ~Item();
-
 };
 
 #endif /* ITEM_H */

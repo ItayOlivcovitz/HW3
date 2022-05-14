@@ -1,72 +1,61 @@
-#include <iostream>
+//Student1 Daniel Penkov, penkovdany@gmail.com, 207925504
+//Student2 Itay Olivcovitz, Itay.olivcovitz@gmail.com, 207745639
+
 #include "Keyboard.h"
-#include "Computer.h"
-#include <string>
-#include "PeripheralDevice.h"
 
-//constractor
-Keyboard::Keyboard(const int price, const std::string manufacturer, const std::string color, const bool isWireless, int numberOfKeys)
-	: PeripheralDevice(color, isWireless,price,manufacturer), m_numberOfKeys(numberOfKeys)
+/**
+ * @brief Construct a new Keyboard object.
+ * 
+ * @param price - keyboard price
+ * @param manufacturer - keyboard brand
+ * @param color - keyboard color
+ * @param isWireless - is the keyboard wireless
+ * @param numOfKeys - number of keyies in keyboard
+ */
+Keyboard::Keyboard(const int price, const string& manufacturer, const string& color, const bool isWireless, const int numOfKeys)
+	: PeripheralDevice(price, manufacturer, color, isWireless), numOfKeys(numOfKeys)
+{}
+
+/**
+ * @brief Set number of keys in keyboard.
+ * 
+ * @param numOfKeys - keys in keyboard
+ */
+void Keyboard::setNumOfKeys(const int numOfKeys)
 {
+	this->numOfKeys = numOfKeys;
 }
 
- //set the number of keys in the keyboard
-void Keyboard::setNumberOfKeys(const int numberOfKeys)
+/**
+ * @brief Get number of keys in keyboard.
+ * 
+ * @return int
+ */
+int Keyboard::getNumOfKeys() const
 {
-	this->m_numberOfKeys = numberOfKeys;
+	return this->numOfKeys;
 }
 
-//return the number of keys in the keyboard
-int Keyboard::getNumberOfKeys() const
+/**
+ * @brief Return string representing this keyboard.
+ * 
+ * @return string 
+ */
+Keyboard::operator string() const
 {
-	return this->m_numberOfKeys;
+	string s_keyboard = "Keyboard with " + to_string(this->getNumOfKeys()) + " keys";
+
+	return PeripheralDevice::operator string() + ", " + s_keyboard;
 }
 
-//casting operator (to string)
-Keyboard::operator std::string() const
-{
-	std::string s_item;
-	std::string s_isWireless;
-	std::string s_color;
-	std::string s_keyboard;
-
-	
-	if (this->getIsWireless() == true)
-	{
-		s_isWireless = "Wireless, ";
-	}
-	else
-	{
-		s_isWireless = "Wired, ";
-	}
-
-	s_item     = Item::operator std::string();
-	s_color    = this->getColor() + ", ";
-	s_keyboard = "Keyboard with " + std::to_string(this->getNumberOfKeys()) + " keys";
-	
-	
-	
-	//id 4: Casio 10$, Wired, Silver, Keyboard with 26 keys
-	return s_item + s_isWireless + s_color + s_keyboard;
-}
-
-//print to with computer the keyboard is connected to
+/**
+ * @brief Print connecting this kayboard to computer.
+ * 
+ * @param computer - to be connected into
+ */
 void Keyboard::connect(const Computer & computer) const
 {
-	std::string s_connecting_item;
-	std::string s_keyboard_info;
-	std::string s_computer_info;
-
-	s_connecting_item = "Connecting a keyboard";
-	std::cout << s_connecting_item << std::endl;
-
-	s_keyboard_info = std::string(*this);
-	s_computer_info = std::string(computer);
-	std::cout << s_keyboard_info <<" is Connecting to computer: "<< s_computer_info << std::endl;
+	cout << "Connecting a keyboard" << endl;
+	PeripheralDevice::connect (computer);
 }
 
-//destractor
-Keyboard::~Keyboard()
-{
-
-}

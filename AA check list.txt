@@ -1,0 +1,99 @@
+
+0. Labels
+-------------------------------
+[ ] - Didn't checked
+[v] - Done.
+[c] - Checked by test code
+[m] - Checked by manual inspection
+
+
+1. Branch
+-------------------------------
+[v] Branch (const string& location)
+[v] void addItem (Item& item)
+    [c] - Check for memory access errors when adding more the 10 items
+    [c] - Check for memory leaks when adding more then 10 items
+[v] Item** getCatalog (int& size)
+    [c] - Check when branch is empty
+    [c] - Check when more then 10 items added
+[v] string getLocation () const
+[v] void setLocation (const string& location)
+[v] ~Branch()
+    [m] - Check for memory leaks
+
+
+2. Item
+-------------------------------
+[v] Item (const int price, const string& manufacturer)
+[v] void setPrice (const int price)
+[v] int getPrice () const
+[v] int getId () const
+    [c] - Check right chronology of items
+[v] void setManufacturer (const string& manufacturer)
+[v] string getManufacturer () const
+[v] virtual operator string () const = 0
+[v] virtual ~Item ()
+
+
+3. Computer  :  Item
+-------------------------------
+[v] Computer (const int price, const string& manufacturer, const string& cpu, const bool isLaptop)
+[v] void setCpu (const string& cpu)
+[v] string getSpu () const
+[v] void setIsLaptop (const bool isLaptop)
+[v] bool getIsLaptop () const
+[v] operator string () const override
+    [m] - Use item's operator
+
+
+4. PeripheralDevice  :  Item
+-------------------------------
+[v] PeripheralDevice (const int price, const string& manufacturer, const string& color, const bool isWireless)
+[v] void setColor (const string& color)
+[v] string getColor () const
+[v] void setIsWireless (const bool isWireless)
+[v] bool getIsWireless () const
+[v] virtual void connect(const Computer& computer) const = 0
+    [c] - Check right print on casted argument e.g. PeripheralDevice* mouse = new Mouse()
+    [m] - Try minimazing code duplication
+[v] virtual operator string () const override = 0
+
+
+5. Keyboard  :  PeripheralDevice  
+-------------------------------
+[v] Keyboard (const int price, const string& manufacturer, const string& color, const bool isWireless, const int numOfKeys)
+[v] void setNumOfKeys (const int numOfKeys)
+[v] int getNumOfKeys () const
+[v] void connect(const Computer& computer) const override
+[v] operator string () const override
+    [m] - Use PeripheralDevice's operator
+
+
+6. Mouse  :  PeripheralDevice  
+-------------------------------
+[v] Keyboard (const int price, const string& manufacturer, const string& color, const bool isWireless, const int dpi)
+[v] void setDpi (const int dpi)
+[v] int getDpi () const
+[v] void connect(const Computer& computer) const override
+[v] operator string () const override
+    [m] - Use PeripheralDevice's operator
+
+
+7. Notes:
+-------------------------------
+[v][v][v][v][v][v] - Add const for functions / functions arguments / fields
+[v][v][v][v][v][v] - Maximaze use of reference variables
+[v][v][v][v][v][v] - Use static functions / static variables
+[v][v][v][v][v][v] - Use virtual functions
+[v][v][v][v][v][v] - Set functions abstruct where needed
+[v][v][v][v][v][v] - Right use of price 'private', 'protected', 'public'
+[v][v][v][v][v][v] - Set comments
+[v][v][v][v][v][v] - Check forum for updates and notes
+ ^  ^  ^  ^  ^  ^
+ |  |  |  |  |  + Mouse
+ |  |  |  |  + Keyboard
+ |  |  |  + PeripheralDevice
+ |  |  + Computer
+ |  + Item
+ + Branch
+

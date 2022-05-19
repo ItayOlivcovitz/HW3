@@ -9,7 +9,7 @@
  * @param location of Branch
  */
 Branch::Branch(const string& location)
-	: location(location), capacity(0)
+	: location(location), capacity(INITIAL_SIZE)
 {
 	// Allocate array to store the items
 	this->itemCatalog = new Item* [STORE_SIZE];
@@ -21,8 +21,8 @@ int Branch::nextItemIndex() const
 	if (this->capacity >= STORE_SIZE)
 	{
 		// In Case more items added then branch can store
-		delete this->itemCatalog[capacity % 10];
-		return capacity % 10;
+		delete this->itemCatalog[capacity % STORE_SIZE];
+		return capacity % STORE_SIZE;
 	}
 
 	return this->capacity;

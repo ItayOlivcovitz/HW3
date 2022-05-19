@@ -7,6 +7,8 @@
 #include <string>
 #include <iostream>
 
+#define FIRST_ID 1
+
 using std::string;
 using std::to_string;
 

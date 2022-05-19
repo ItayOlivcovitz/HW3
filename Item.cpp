@@ -4,7 +4,7 @@
 #include "Item.h"
 
 // Starts ids from 1
-int Item::nextItemId = 1;
+int Item::nextItemId = FIRST_ID;
 
 /**
  * @brief Construct a new Item object.

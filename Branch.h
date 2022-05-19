@@ -8,6 +8,7 @@
 #include <string>
 
 #define STORE_SIZE 10
+#define INITIAL_SIZE 0
 
 using std::string;
 

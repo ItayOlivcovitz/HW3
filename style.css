@@ -1,0 +1,19 @@
+#mylink {
+    color: blue
+}
+
+body.main-body {
+    background-color: aliceblue;
+}
+
+tr.clickable {
+    cursor: pointer;
+}
+
+tr.clickable:hover {
+    background-color: #48ab9265;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}

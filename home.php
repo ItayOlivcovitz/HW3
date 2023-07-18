@@ -7,7 +7,8 @@ if (!isset($_COOKIE['Email'])) {
   }
 }
 ?>
-
+  
+  
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 

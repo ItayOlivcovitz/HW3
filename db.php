@@ -31,17 +31,33 @@ $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
     PRIMARY KEY (`Id`)
 ) ENGINE = InnoDB";
 
-$conn->query($sql); // Execute the table creation query
 
-// Insert additional users if the 'users' table is empty
-$additionalUsersSql = "INSERT INTO `$tableName` (`Id`, `First Name`, `Last Name`, `Email`, `Password`)
-    SELECT NULL, 'User1', 'User1', 'user1@test.test', 'test123' UNION
-    SELECT NULL, 'User2', 'User2', 'user2@test.test', 'test123' UNION
+if ($conn->query($sql) === TRUE) {
+    // echo "Table created successfully";
+
+} else {
+    // echo "Error creating table: " . $conn->error;
+}
+
+// Insert  record if the 'users' table is empty
+$insertSql = "INSERT INTO `$tableName` (`Id`, `First Name`, `Last Name`, `Email`, `Password`)
+    SELECT NULL, 'Itay', 'Hamelech', 'test@test.test', 'test'
+    FROM DUAL
+    WHERE NOT EXISTS (SELECT * FROM `$tableName`)
+    UNION
+    SELECT NULL, 'User1', 'User1', 'user1@test.test', 'test123'
+    FROM DUAL
+    WHERE NOT EXISTS (SELECT * FROM `$tableName`)
+    UNION
+    SELECT NULL, 'User2', 'User2', 'user2@test.test', 'test123'
+    FROM DUAL
+    WHERE NOT EXISTS (SELECT * FROM `$tableName`)
+    UNION
     SELECT NULL, 'User3', 'User3', 'user3@test.test', 'test123'
     FROM DUAL
     WHERE NOT EXISTS (SELECT * FROM `$tableName`)";
-
-$conn->query($additionalUsersSql); // Execute the additional users insertion query
-
-$conn->close(); // Close the database connection
-?>
+if ($conn->query($insertSql) === TRUE) {
+    //  echo "Initial record created successfully";
+} else {
+    //echo "Error: " . $insertSql . "<br>" . $conn->error;
+}

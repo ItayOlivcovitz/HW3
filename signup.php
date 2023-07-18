@@ -61,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 
@@ -102,7 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="col-md-6 col-12">
               <label for="validationDefault03" class="form-label">אימות אימייל:<span class="text-danger h5"><b>*</b></span></label>
-              <input type="email" class="form-control" id="inputEmail6" name="Email_validation" required>
+              <input type="email" class="form-control" id="inputEmail6" name="Email_validation" oninput="validateEmail()">
+
+              <span id="emailValidationMsg" class="text-danger"></span>
             </div>
             <div class="col-md-6 col-12">
               <label for="validationDefault04" class="form-label">סיסמא:<span class="text-danger h5"><b>*</b></span></label>
@@ -110,11 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="col-md-6 col-12">
               <label for="validationDefault05" class="form-label">אימות סיסמא:<span class="text-danger h5"><b>*</b></span></label>
-              <input type="password" class="form-control" id="inputPassword5" name="Password_validation" required>
+              <input type="password" class="form-control" id="inputPassword5" name="Password_validation" required oninput="validatePassword()">
+              <span id="PasswordValidationMsg" class="text-danger"></span>
             </div>
-            <div class="col-6 col-md-4 ">
-              <div class="form-check ">
-                <input class="form-check-input " type="checkbox" value="" id="invalidCheck2" required>
+            <div class="col-6 col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
                 <label class="form-check-label" for="invalidCheck2">
                   אני מסכים ל
                   <a id="mylink" href="#">תנאי השימוש</a>
@@ -122,20 +124,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
             </div>
             <div class="col-8"></div>
-            <div class="col-2 col-md-4 "></div>
+            <div class="col-2 col-md-4"></div>
 
             <div class="row mb-3 me-md-1 me-1">
               <button class="btn btn-primary col-12 mb-2 ms-md-4 ms-lg-5 ms-xl-5 col-md-4" type="submit"> הרשמה</button>
               <div class="col-xl-2 col-md-2 ms-2 ms-md-4 ms-lg-4 ms-xl-5"></div>
               <button type="reset" class="btn border-2 btn-danger mb-2 me-md-3 col-12 col-md-4 justify-content-left">נקה טופס</button>
             </div>
-
           </div>
         </form>
       </div>
-
     </div>
   </main>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Function to validate email fields
+    function validateEmail() {
+      var email = document.getElementById('Email').value;
+      var emailValidation = document.getElementById('inputEmail6').value;
+      var emailValidationMsg = document.getElementById('emailValidationMsg');
+
+      if (email !== emailValidation) {
+        emailValidationMsg.textContent = "Emails do not match";
+        return false;
+      } else {
+        emailValidationMsg.textContent = "";
+        return true;
+      }
+    }
+
+    function validatePassword() {
+      var password = document.getElementById('inputPassword4').value;
+      var passwordValidation = document.getElementById('inputPassword5').value;
+      var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
+
+      if (password !== passwordValidation) {
+        PasswordValidationMsg.textContent = "Passwords do not match";
+        return false;
+      } else {
+        PasswordValidationMsg.textContent = "";
+        return true;
+      }
+    }
+
+    // Function to handle form submission
+    function submitForm(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      if (validateEmail()) {
+        var form = document.getElementById('signup-form');
+        var formData = new FormData(form);
+
+        // Make an AJAX request to submit the form data
+        var xhr = new XMLHttpRequest();
+        xhr.open(form.method, form.action, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // Form submitted successfully
+            window.location.href = "index.php";
+          } else if (xhr.readyState === 4) {
+            // Error occurred during form submission
+            console.error(xhr.responseText);
+          }
+        };
+        xhr.send(formData);
+      }
+    }
+
+    // Add event listener to the form submit button
+    var submitButton = document.querySelector('button[type="submit"]');
+    submitButton.addEventListener('click', submitForm);
+  </script>
   <script src="add_bootstrap.js"></script>
   <script>
     window.onload = function() {

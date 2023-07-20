@@ -31,7 +31,6 @@ $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
     PRIMARY KEY (`Id`)
 ) ENGINE = InnoDB";
 
-
 if ($conn->query($sql) === TRUE) {
     // echo "Table created successfully";
 
@@ -60,4 +59,51 @@ if ($conn->query($insertSql) === TRUE) {
     //  echo "Initial record created successfully";
 } else {
     //echo "Error: " . $insertSql . "<br>" . $conn->error;
+}
+
+// Create the 'lists' table if it doesn't exist
+$tableName = "lists";
+$sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
+`listID` int(11) NOT NULL,
+  `listName` varchar(256) NOT NULL,
+  `creationDate` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+
+if ($conn->query($sql) === TRUE) {
+    // echo "Table created successfully";
+
+} else {
+    // echo "Error creating table: " . $conn->error;
+}
+
+// Create the 'userinlists' table if it doesn't exist
+$tableName = "userinlists";
+$sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
+    `listID` int(11) NOT NULL,
+    `userID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
+
+if ($conn->query($sql) === TRUE) {
+    // echo "Table created successfully";
+
+} else {
+    // echo "Error creating table: " . $conn->error;
+}
+
+// Create the 'tasks' table if it doesn't exist
+$tableName = "tasks";
+$sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
+    `listID` int(11) NOT NULL,
+    `taskID` int(11) NOT NULL,
+    `taskDescription` varchar(256) NOT NULL,
+    `creationDate` date NOT NULL,
+    `userID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+";
+
+if ($conn->query($sql) === TRUE) {
+    // echo "Table created successfully";
+
+} else {
+    // echo "Error creating table: " . $conn->error;
 }

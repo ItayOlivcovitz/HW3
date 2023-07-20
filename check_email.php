@@ -10,6 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $row = $result->fetch_assoc();
   $count = $row['count'];
 
-  echo $count === 0 ? 'true' : 'false';
+  echo $count === '0' ? 'true' : 'false';
 }
 ?>

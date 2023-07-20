@@ -137,64 +137,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </main>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
-<script>
-  // Function to validate if it is the same email
-  function validateEmail() {
+  <script>
+   // Function to validate email fields
+function validateEmail() {
   var email = document.getElementById('Email').value;
   var emailValidation = document.getElementById('inputEmail6').value;
   var emailValidationMsg = document.getElementById('emailValidationMsg');
 
-  checkEmailAvailability(function(isAvailable) {
-    if (isAvailable) {
-      // Email is available, proceed with other checks
-      if (email !== emailValidation) {
-        emailValidationMsg.textContent = "Emails do not match";
-      } else {
-        emailValidationMsg.textContent = "";
-      }
-    } else {
-      // Email is not available, display an error message
-      emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
-    }
-  });
-}
-
-  function handleEmailAvailability(isAvailable) {
-  if (isAvailable) {
-    // Email is available, you can proceed with form submission or other actions
-    console.log("Email is available.");
+  // Check if the emails match
+  if (email !== emailValidation) {
+    emailValidationMsg.textContent = "Emails do not match";
+    return false;
   } else {
-    // Email is not available, display an error message or take appropriate action
-    console.log("Email already exists. Please choose a different email.");
+    emailValidationMsg.textContent = "";
+    // Call the function to check email availability
+    checkEmailAvailability(email, function(isAvailable) {
+      if (isAvailable) {
+        emailValidationMsg.textContent = "Email is available!";
+      } else {
+        emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
+      }
+    });
+    return true;
   }
 }
-  // Function to validate if it is the same password
-  function validatePassword() {
-    var password = document.getElementById('inputPassword4').value;
-    var passwordValidation = document.getElementById('inputPassword5').value;
-    var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
 
-    if (password !== passwordValidation) {
-      PasswordValidationMsg.textContent = "Passwords do not match";
-      return false;
-    } else {
-      PasswordValidationMsg.textContent = "";
-      return true;
-    }
-  }
-
-  // Function to handle email availability check
-  function checkEmailAvailability(callback) {
-  var email = document.getElementById('Email').value;
-
+    // Function to handle email availability check
+function checkEmailAvailability(email, callback) {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "check_email.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onreadystatechange = function() {
     if (xhr.readyState === 4 && xhr.status === 200) {
       var emailValidationMsg = document.getElementById('emailValidationMsg');
-      emailValidationMsg.textContent = xhr.responseText.trim() === "true" ? "" : "Email already exists. Please choose a different email.";
       document.getElementById('Email').dataset.available = xhr.responseText.trim();
 
       // Call the callback function with the result
@@ -209,46 +184,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   xhr.send("Email=" + email);
 }
 
+    function validatePassword() {
+      var password = document.getElementById('inputPassword4').value;
+      var passwordValidation = document.getElementById('inputPassword5').value;
+      var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
 
-  // Add event listener to the email field's blur event
-  var emailField = document.getElementById('Email');
-  emailField.addEventListener('blur', checkEmailAvailability);
-
-  // Function to handle form submission
-  function submitForm(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    if (validateEmail() && validatePassword()) {
-      var form = document.getElementById('signup-form');
-      var formData = new FormData(form);
-
-      // Make an AJAX request to submit the form data
-      var xhr = new XMLHttpRequest();
-      xhr.open(form.method, form.action, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          // Form submitted successfully
-          window.location.href = "index.php";
-        } else if (xhr.readyState === 4) {
-          // Error occurred during form submission
-          console.error(xhr.responseText);
-        }
-      };
-      xhr.send(formData);
+      if (password !== passwordValidation) {
+        PasswordValidationMsg.textContent = "Passwords do not match";
+        return false;
+      } else {
+        PasswordValidationMsg.textContent = "";
+        return true;
+      }
     }
-  }
 
-  // Add event listener to the form submit button
-  var submitButton = document.querySelector('button[type="submit"]');
-  submitButton.addEventListener('click', submitForm);
-</script>
-<script src="add_bootstrap.js"></script>
-<script>
-  window.onload = function() {
-    createNavbar();
-    createFooter();
-  };
-</script>
+    // Function to handle form submission
+function submitForm(event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  // Check if the emails and passwords are valid before proceeding with form submission
+  if (validateEmail() && validatePassword()) {
+    var email = document.getElementById('Email').value;
+
+    // Check email availability before submitting the form
+    checkEmailAvailability(email, function(isAvailable) {
+      if (isAvailable) {
+        // Email is available, proceed with form submission
+        var form = document.getElementById('signup-form');
+        var formData = new FormData(form);
+
+        // Make an AJAX request to submit the form data
+        var xhr = new XMLHttpRequest();
+        xhr.open(form.method, form.action, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // Form submitted successfully
+            window.location.href = "index.php";
+          } else if (xhr.readyState === 4) {
+            // Error occurred during form submission
+            console.error(xhr.responseText);
+          }
+        };
+        xhr.send(formData);
+      } else {
+        // Email already exists, display an error message
+        var emailValidationMsg = document.getElementById('emailValidationMsg');
+        emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
+      }
+    });
+  }
+}
+
+
+    // Add event listener to the form submit button
+    var submitButton = document.querySelector('button[type="submit"]');
+    submitButton.addEventListener('click', submitForm);
+  </script>
+  <script src="add_bootstrap.js"></script>
+  <script>
+    window.onload = function() {
+      createNavbar();
+      createFooter();
+    };
+  </script>
 </body>
 
 </html>

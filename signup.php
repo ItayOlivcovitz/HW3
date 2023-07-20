@@ -137,71 +137,118 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </main>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Function to validate email fields
-    function validateEmail() {
-      var email = document.getElementById('Email').value;
-      var emailValidation = document.getElementById('inputEmail6').value;
-      var emailValidationMsg = document.getElementById('emailValidationMsg');
+  
+<script>
+  // Function to validate if it is the same email
+  function validateEmail() {
+  var email = document.getElementById('Email').value;
+  var emailValidation = document.getElementById('inputEmail6').value;
+  var emailValidationMsg = document.getElementById('emailValidationMsg');
 
+  checkEmailAvailability(function(isAvailable) {
+    if (isAvailable) {
+      // Email is available, proceed with other checks
       if (email !== emailValidation) {
         emailValidationMsg.textContent = "Emails do not match";
-        return false;
       } else {
         emailValidationMsg.textContent = "";
-        return true;
       }
+    } else {
+      // Email is not available, display an error message
+      emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
     }
+  });
+}
 
-    function validatePassword() {
-      var password = document.getElementById('inputPassword4').value;
-      var passwordValidation = document.getElementById('inputPassword5').value;
-      var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
+  function handleEmailAvailability(isAvailable) {
+  if (isAvailable) {
+    // Email is available, you can proceed with form submission or other actions
+    console.log("Email is available.");
+  } else {
+    // Email is not available, display an error message or take appropriate action
+    console.log("Email already exists. Please choose a different email.");
+  }
+}
+  // Function to validate if it is the same password
+  function validatePassword() {
+    var password = document.getElementById('inputPassword4').value;
+    var passwordValidation = document.getElementById('inputPassword5').value;
+    var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
 
-      if (password !== passwordValidation) {
-        PasswordValidationMsg.textContent = "Passwords do not match";
-        return false;
-      } else {
-        PasswordValidationMsg.textContent = "";
-        return true;
-      }
+    if (password !== passwordValidation) {
+      PasswordValidationMsg.textContent = "Passwords do not match";
+      return false;
+    } else {
+      PasswordValidationMsg.textContent = "";
+      return true;
     }
+  }
 
-    // Function to handle form submission
-    function submitForm(event) {
-      event.preventDefault(); // Prevent the default form submission
+  // Function to handle email availability check
+  function checkEmailAvailability(callback) {
+  var email = document.getElementById('Email').value;
 
-      if (validateEmail()) {
-        var form = document.getElementById('signup-form');
-        var formData = new FormData(form);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "check_email.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var emailValidationMsg = document.getElementById('emailValidationMsg');
+      emailValidationMsg.textContent = xhr.responseText.trim() === "true" ? "" : "Email already exists. Please choose a different email.";
+      document.getElementById('Email').dataset.available = xhr.responseText.trim();
 
-        // Make an AJAX request to submit the form data
-        var xhr = new XMLHttpRequest();
-        xhr.open(form.method, form.action, true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            // Form submitted successfully
-            window.location.href = "index.php";
-          } else if (xhr.readyState === 4) {
-            // Error occurred during form submission
-            console.error(xhr.responseText);
-          }
-        };
-        xhr.send(formData);
-      }
+      // Call the callback function with the result
+      callback(xhr.responseText.trim() === "true");
+    } else if (xhr.readyState === 4) {
+      console.error(xhr.responseText);
+
+      // Call the callback function with the result as false in case of an error
+      callback(false);
     }
+  };
+  xhr.send("Email=" + email);
+}
 
-    // Add event listener to the form submit button
-    var submitButton = document.querySelector('button[type="submit"]');
-    submitButton.addEventListener('click', submitForm);
-  </script>
-  <script src="add_bootstrap.js"></script>
-  <script>
-    window.onload = function() {
-      createNavbar();
-      createFooter();
-    };
-  </script>
+
+  // Add event listener to the email field's blur event
+  var emailField = document.getElementById('Email');
+  emailField.addEventListener('blur', checkEmailAvailability);
+
+  // Function to handle form submission
+  function submitForm(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    if (validateEmail() && validatePassword()) {
+      var form = document.getElementById('signup-form');
+      var formData = new FormData(form);
+
+      // Make an AJAX request to submit the form data
+      var xhr = new XMLHttpRequest();
+      xhr.open(form.method, form.action, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Form submitted successfully
+          window.location.href = "index.php";
+        } else if (xhr.readyState === 4) {
+          // Error occurred during form submission
+          console.error(xhr.responseText);
+        }
+      };
+      xhr.send(formData);
+    }
+  }
+
+  // Add event listener to the form submit button
+  var submitButton = document.querySelector('button[type="submit"]');
+  submitButton.addEventListener('click', submitForm);
+</script>
+<script src="add_bootstrap.js"></script>
+<script>
+  window.onload = function() {
+    createNavbar();
+    createFooter();
+  };
+</script>
 </body>
 
 </html>

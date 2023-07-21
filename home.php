@@ -1,14 +1,16 @@
 <?php
 session_start();
-$_SESSION['name'];
+// Session check
 if (!isset($_COOKIE['Email'])) {
   if (!isset($_SESSION['name'])) {
     header("Location: index.php");
+    exit; // Make sure to exit after redirection
   }
 }
 ?>
-  
-  
+
+
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 
@@ -18,6 +20,9 @@ if (!isset($_COOKIE['Email'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taskmaster - Homepage</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 
 <body class="main-body">
@@ -33,86 +38,201 @@ if (!isset($_COOKIE['Email'])) {
             <th scope="col">משתמשים</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>תרגילי בית</td>
-            <td>15.10.2022</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>מטלות בית</td>
-            <td>02.09.2021</td>
-            <td>ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>מחויבויות לחיים</td>
-            <td>01.01.2023</td>
-            <td>איתי אוליבקוביץ'</td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>נוכחות במלגה</td>
-            <td>15.10.2022</td>
-            <td>ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">5</th>
-            <td>מועדי מבחנים</td>
-            <td>01.11.2022</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">6</th>
-            <td>מטלות לעל האש</td>
-            <td>03.02.2023</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">7</th>
-            <td>מטלות בית</td>
-            <td>03.10.2021</td>
-            <td>איתי אוליבקוביץ'</td>
-          </tr>
-          <tr>
-            <th scope="row">8</th>
-            <td>עבודות כיתה</td>
-            <td>28.02.2023</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">9</th>
-            <td>ציוד למסע כומתה</td>
-            <td>03.03.2022</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">10</th>
-            <td>ציוד ליום הולדת של נדב</td>
-            <td>03.02.2023</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">11</th>
-            <td>חתונה</td>
-            <td>24.12.2022</td>
-            <td> ליאור פוקין</td>
-          </tr>
-          <tr>
-            <th scope="row">12</th>
-            <td>בר מצווה של יניב</td>
-            <td>04.04.2023</td>
-            <td>איתי אוליבקוביץ', ליאור פוקין</td>
-          </tr>
+        <tbody id="list-table-body">
+
         </tbody>
       </table>
     </div>
+    <div class="container mb-4">
+      <div class="row justify-content-center">
+        <button type="button" class="btn border-2 btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">ליצירת רשימה חדשה</button>
+      </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" dir="rtl">
+      <div class="modal-dialog" dir="rtl">
+        <div class="modal-content" dir="rtl">
+          <div dir="rtl" class="modal-header">
+            <div class="row">
+              <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 dir="rtl" class="modal-title ">יצירת רשימה חדשה</h5>
+            </div>
+          </div>
+          <div class="modal-body">
+            <form id="create-list-form" action="create_list.php" method="post">
+              <div class="mb-3">
+                <label for="list_description" class="col-form-label">שם הרשימה:</label>
+                <input type="text" class="form-control" id="list_description">
+              </div>
+              <div class="mb-3">
+                <label for="autocomplete-input" class="col-form-label">משתמשים שותפים</label>
+                <input type="text" id="autocomplete-input" class="form-control">
+                <input type="hidden" id="selected-users" name="selected-users">
+              </div>
+              <div id="selected-users-container"> משתמשים שנבחרו: </div>
+              <ul id="autocomplete-dropdown" class="ui-autocomplete"></ul>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
+            <button type="submit" class="btn btn-primary" form="create-list-form">צור רשימה חדשה</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
   <script>
-    const rows = document.querySelectorAll("tr");
+    $(function() {
+      <?php
+      require_once("get_users.php");
+      $usernames = fetchUsernames();
 
+      $user_email = $_SESSION['name'];
+      if (!in_array($user_email, $usernames)) {
+        $usernames[] = $user_email;
+      }
+      ?>
+
+      function fetchLists() {
+
+        $.ajax({
+          type: "GET",
+          url: "fetch_lists.php", // PHP file to fetch lists from the database
+          dataType: "json",
+          success: function(response) {
+            populateTable(response);
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+
+      function populateTable(lists) {
+        var tableBody = $("#list-table-body");
+        tableBody.empty(); // Clear any existing rows
+
+        // Loop through the fetched lists and create table rows
+        for (var i = 0; i < lists.length; i++) {
+          var list = lists[i];
+          var listID = i + 1; // Calculate listID based on the loop index
+
+          var row = `
+      <tr class="clickable" data-listid="${list.listID}">
+        <th scope="row">${listID}</th>
+        <td>${list.listName}</td>
+        <td>${list.creationDate}</td>
+        <td>${list.users}</td>
+      </tr>
+    `;
+          tableBody.append(row);
+        }
+
+        // Use event delegation to handle click events on dynamic elements
+        tableBody.on("click", ".clickable", function() {
+          var listID = $(this).data("listid"); // Get listID from the data attribute
+          // Navigate to the list.php page with the selected listID
+          window.location.href = "list.php?listID=" + listID;
+        });
+      }
+
+      fetchLists();
+
+      var selectedUsersArray = []; // Array to store selected users
+      function fetchCurrentUserEmailInfo() {
+        $.ajax({
+          type: "GET",
+          url: "get_user_info.php", // PHP file to fetch the user info
+          data: {
+            email: "<?php echo $user_email; ?>"
+          },
+          dataType: "json",
+          success: function(response) {
+            // Append the user info to the selectedUsers array
+            if (response.user_info) {
+              selectedUsersArray.push(response.user_info);
+            }
+            // Update the hidden input value and display the selected users
+            $("#selected-users").val(JSON.stringify(selectedUsersArray)); // Convert to JSON string
+            displaySelectedUsers(selectedUsersArray);
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+
+      // Call the function to fetch the current user's email information
+      fetchCurrentUserEmailInfo();
+      $("#autocomplete-input").autocomplete({
+        source: <?php echo json_encode($usernames); ?>,
+        appendTo: "#autocomplete-dropdown",
+        select: function(event, ui) {
+          event.preventDefault();
+          var selectedUser = ui.item.value;
+          // Check if the selected user already exists in the array
+          if (selectedUsersArray.indexOf(selectedUser) === -1) {
+            selectedUsersArray.push(selectedUser);
+            $("#selected-users").val(JSON.stringify(selectedUsersArray)); // Convert to JSON string
+            $(this).val("");
+            // Update the display of selected users
+            displaySelectedUsers(selectedUsersArray);
+          } else {
+            // Handle the case when the user is already selected
+            alert("לא ניתן לבחור באותו משתמש יותר מפעם אחת!");
+          }
+        }
+      });
+
+      // Function to update the display of selected users
+      function displaySelectedUsers(users) {
+        var container = $("#selected-users-container");
+        container.html("משתמשים שנבחרו: <br>" + users.join("<br>"));
+      }
+
+
+      // Handle form submission
+      $("#create-list-form").submit(function(event) {
+        event.preventDefault();
+        var listDescription = $("#list_description").val();
+        var selectedUsers = $("#selected-users").val(); // No need to split
+
+        // Make an AJAX POST request to create_list.php
+        $.ajax({
+          type: "POST",
+          url: "create_list.php",
+          data: {
+            list_description: listDescription,
+            selected_users: selectedUsers
+          },
+          success: function(response) {
+            console.log(response);
+
+            // Clear the selections and close the form
+            $("#list_description").val("");
+            $("#selected-users").val("");
+            $("#selected-users-container").html("משתמשים שנבחרו:");
+            $("#exampleModal").modal("hide");
+
+            var responseData = JSON.parse(response);
+            var listID = responseData.listID;
+            if (listID) {
+              window.location.href = "list.php?listID=" + listID;
+            } else {
+              console.error("Error: Unable to get the list ID from the response.");
+              console.error(response.listID);
+            }
+          },
+          error: function(xhr, status, error) {
+            // Handle errors, if any
+            console.error(error);
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
+    const rows = document.querySelectorAll("tr");
     for (let i = 1; i < rows.length; i++) {
       rows[i].classList.add("clickable");
       rows[i].addEventListener("click", function() {
@@ -126,6 +246,13 @@ if (!isset($_COOKIE['Email'])) {
       createLoggedNavbar();
       createLoggedFooter();
     };
+  </script>
+  <script>
+    document.getElementById("new_list").addEventListener("click", function() {
+      // Show the modal when the button is clicked
+      var myModal = new bootstrap.Modal(document.getElementById("myModal"));
+      myModal.show();
+    });
   </script>
 </body>
 

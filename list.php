@@ -22,6 +22,7 @@ function getUserNameByID($userID)
   $row = $result->fetch_assoc();
   return $row['full_name'];
 }
+include("get_task_users.php");
 include("query_tasks.php");
 ?>
 
@@ -33,7 +34,41 @@ include("query_tasks.php");
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
   <title>Taskmaster - example list</title>
+  <style>
+    /* Custom styling for autocomplete dropdown */
+    .custom-autocomplete {
+      position: absolute;
+      z-index: 9999;
+      /* Set a high z-index to ensure it appears above other elements */
+      background-color: white;
+      border: 1px solid #ccc;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  </style>
+
+
+  <script>
+    jQuery(document).ready(function($) {
+      <?php
+      // Fetch the listID from GET method
+      $listID = $_GET['listID'] ?? 0;
+
+      // Fetch usernames based on listID and userEmail
+      $usernames = fetchTaskUsernamesByListID($listID, $_SESSION['name']);
+      ?>
+
+      var usernames = <?php echo json_encode($usernames); ?>;
+      $("#autocomplete-input-tasks").autocomplete({
+        source: usernames,
+      }).autocomplete("widget").addClass("custom-autocomplete");
+    });
+  </script>
 </head>
 
 <body class="main-body">
@@ -53,28 +88,29 @@ include("query_tasks.php");
               </div>
             </div>
             <div class="modal-body">
-              <form id="create-task-form" action="create_task.php" method="post">
+              <form id="create-task-form" action="create_task.php?listID=<?php echo $listID; ?>" method="post">
                 <div class="mb-3">
                   <label for="task_description" class="col-form-label">שם המשימה:</label>
-                  <input type="text" class="form-control" id="task_description">
+                  <input type="text" class="form-control" id="task_description" name="task_description">
                 </div>
                 <div class="mb-3">
-                  <label for="autocomplete-input" class="col-form-label">משתמש אחראי:</label>
-                  <input type="text" id="autocomplete-input-tasks" class="form-control">
-                  <input type="hidden" id="selected-users-tasks" name="selected-users">
+                  <label for="autocomplete-input-tasks" class="col-form-label">משתמש אחראי:</label>
+                  <input type="text" id="autocomplete-input-tasks" class="form-control" name="user_responsible">
                 </div>
-                <div id="selected-users-container-tasks"> משתמשים שנבחרו: </div>
-                <ul id="autocomplete-dropdown-tasks" class="ui-autocomplete"></ul>
+                <div class="mb-3">
+                  <label for="null" class="col-form-label text-danger" style="font-weight: bold;">יש לשים לב שאם לא יוגדר משתמש אחראי, המשתמש הנוכחי יוגדר כאחראי</label>
+                </div>
+                <input type="hidden" id="task_id" name="task_id">
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
-              <button type="submit" class="btn btn-primary" form="create-list-form">צור משימה חדשה</button>
+              <button type="submit" class="btn btn-primary" form="create-task-form">צור משימה חדשה</button>
             </div>
           </div>
         </div>
       </div>
-      <table class="table table-striped border border-info border-1">
+      <table id="task-table" class="table table-striped border border-info border-1">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -116,7 +152,6 @@ include("query_tasks.php");
       checkbox.checked = !checkbox.checked;
     }
   </script>
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
   <script>
     $(document).ready(function() {
       $('.table tbody input[type="checkbox"]').on('change', function() {
@@ -234,6 +269,8 @@ include("query_tasks.php");
       });
     }
   </script>
+
+
 </body>
 
 </html>

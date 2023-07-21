@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         while ($row = $results->fetch_assoc()) {
             if ($row['Email'] == $email && $row['Password'] == $password) {
                 session_start();
-                $_SESSION['name'] = $row['First Name'];
-                echo $_SESSION['name'];
+                $_SESSION['name'] = $row['Email'];
+                $email = $_POST['Email'];
 
                 if (isset($_POST['gridCheck1'])) {
                     // 30 days

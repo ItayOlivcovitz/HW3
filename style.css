@@ -11,9 +11,18 @@ tr.clickable {
 }
 
 tr.clickable:hover {
-    background-color: #48ab9265;
+    background-color: #75f5d565;
 }
 
 .strikethrough {
     text-decoration: line-through;
+}
+
+.notdissabled:hover {
+    background-color: #48ab9265;
+}
+
+.ui-autocomplete {
+    z-index: 1050;
+    /* Set a higher z-index than the modal's z-index */
 }

@@ -97,7 +97,8 @@ $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
     `taskID` int(11) NOT NULL,
     `taskDescription` varchar(256) NOT NULL,
     `creationDate` date NOT NULL,
-    `userID` int(11) NOT NULL
+    `userID` int(11) NOT NULL,
+    `done` BOOLEAN NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 ";
 

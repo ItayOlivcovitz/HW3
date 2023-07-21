@@ -23,29 +23,15 @@ function createNavbar() {
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent" dir="rtl">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
-          <li class="nav-item">
+          <li class="nav-item notdissabled">
             <a class="nav-link active" aria-current="page" href="index.php">דף התחברות</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item notdissabled">
             <a class="nav-link text-primary-emphasis" aria-current="page" href="signup.php">הרשמה</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link  disabled" aria-current="page" href="home.php">הרשימות שלי</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link  disabled" aria-current="page" href="list.php">רשימה לדוגמא</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle disabled" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> המשימות שלי </a>
-            <ul class="dropdown-menu bg-info-subtle">
-              <li><a class="dropdown-item" href="#">לנקות חול לחתולים</a></li>
-              <li><a class="dropdown-item" href="#">להכין לזניה</a></li>
-              <li><a class="dropdown-item" href="#">לעשות תרגיל בית בפיתוח Web</a></li>
-            </ul>
           </li>
         </ul>
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="חפש משימה..." aria-label="Search">
+          <input class="form-control me-2 " type="search" placeholder="חיפוש" aria-label="Search" disabled>
           <button class="btn btn-outline-success bg-info-subtle me-1 disabled" type="submit">חפש</button>
         </form>  
       </div>
@@ -66,10 +52,10 @@ function createLoggedNavbar() {
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent" dir="rtl">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
-          <li class="nav-item">
+          <li class="nav-item notdissabled">
             <a class="nav-link active" aria-current="page" href="home.php">הרשימות שלי</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item notdissabled">
             <a class="nav-link active" aria-current="page" href="list.php">רשימה לדוגמא</a>
           </li>
           <li class="nav-item dropdown">
@@ -82,8 +68,8 @@ function createLoggedNavbar() {
           </li>
         </ul>
         <ul class="navbar-nav">
-        <li class="nav-item">
-          <a id="logoutLink" class="nav-link active text-danger-emphasis" aria-current="page" href="logout.php">התנתקות</a>
+        <li class="nav-item ">
+          <a id="logoutLink" class="nav-link active text-danger-emphasis notdissabled" aria-current="page" href="logout.php">התנתקות</a>
         </li>
       </ul>
         <form class="d-flex" role="search">
@@ -103,16 +89,16 @@ function createFooter() {
         <div class="container-fluid">
           <a class="navbar-brand display-6 text-info-emphasis " href="index.php">&copy;Ṭask൬aster</a>
           <ul class="navbar-nav mb-2 mb-lg-0 pe-0" dir="rtl">
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" aria-current="page" href="index.php">דף התחברות</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#">עלינו</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#">צור קשר</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#"> תנאי השימוש</a>
             </li>
           </ul>
@@ -131,16 +117,16 @@ function createLoggedFooter() {
         <div class="container-fluid">
           <a class="navbar-brand display-6 text-info-emphasis " href="home.php">&copy;Ṭask൬aster</a>
           <ul class="navbar-nav mb-2 mb-lg-0 pe-0" dir="rtl">
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" aria-current="page" href="home.php">דף הרשימות שלי</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#">עלינו</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#">צור קשר</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item notdissabled">
               <a class="nav-link" href="#"> תנאי השימוש</a>
             </li>
           </ul>

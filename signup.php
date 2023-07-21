@@ -94,15 +94,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <input type="text" class="form-control" id="Last_Name" name="Last_Name" required>
             </div>
             <div class="col-md-6 col-12">
-              <label for="validationDefaultUsername" class="form-label">אימייל:<span class="text-danger h5"><b>*</b></span></label>
-              <div class="input-group">
-                <input type="email" class="form-control" id="Email" name="Email" required>
-              </div>
+              
+                <label for="validationDefaultUsername" class="form-label">אימייל:<span class="text-danger h5"><b>*</b></span></label>
+                <input type="email" class="form-control" id="Email" name="Email" required oninput="EmailInDB()">
+                <span id="emailInDBMsg" class="text-danger"></span>
+              
             </div>
             <div class="col-md-6 col-12">
               <label for="validationDefault03" class="form-label">אימות אימייל:<span class="text-danger h5"><b>*</b></span></label>
               <input type="email" class="form-control" id="inputEmail6" name="Email_validation" oninput="validateEmail()">
-
               <span id="emailValidationMsg" class="text-danger"></span>
             </div>
             <div class="col-md-6 col-12">
@@ -115,13 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <span id="PasswordValidationMsg" class="text-danger"></span>
             </div>
             <div class="col-6 col-md-4">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
-                <label class="form-check-label" for="invalidCheck2">
-                  אני מסכים ל
-                  <a id="mylink" href="#">תנאי השימוש</a>
-                  <span class="text-danger h5"><b>*</b></span></label>
-              </div>
+            <div class="form-check">
+  <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+  <label class="form-check-label" for="invalidCheck2">
+    אני מסכים ל
+    <a id="mylink" href="#">תנאי השימוש</a>
+    <span id="checkboxMsg" class="text-danger h5"><b>*</b></span>
+  </label>
+</div>
             </div>
             <div class="col-8"></div>
             <div class="col-2 col-md-4"></div>
@@ -138,107 +139,151 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </main>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-   // Function to validate email fields
-function validateEmail() {
-  var email = document.getElementById('Email').value;
-  var emailValidation = document.getElementById('inputEmail6').value;
-  var emailValidationMsg = document.getElementById('emailValidationMsg');
+   // Function to check email availability
+  function EmailInDB(callback) {
+    var email = document.getElementById('Email').value;
+    var emailInDBMsg = document.getElementById('emailInDBMsg');
 
-  // Check if the emails match
-  if (email !== emailValidation) {
-    emailValidationMsg.textContent = "Emails do not match";
-    return false;
-  } else {
-    emailValidationMsg.textContent = "";
     // Call the function to check email availability
     checkEmailAvailability(email, function(isAvailable) {
       if (isAvailable) {
-        emailValidationMsg.textContent = "Email is available!";
+        emailInDBMsg.textContent = "Email is available!";
       } else {
-        emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
+        emailInDBMsg.textContent = "Email already exists. Please choose a different email.";
       }
-    });
-    return true;
-  }
-}
-
-    // Function to handle email availability check
-function checkEmailAvailability(email, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "check_email.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      var emailValidationMsg = document.getElementById('emailValidationMsg');
-      document.getElementById('Email').dataset.available = xhr.responseText.trim();
 
       // Call the callback function with the result
-      callback(xhr.responseText.trim() === "true");
-    } else if (xhr.readyState === 4) {
-      console.error(xhr.responseText);
-
-      // Call the callback function with the result as false in case of an error
-      callback(false);
-    }
-  };
-  xhr.send("Email=" + email);
-}
-
-    function validatePassword() {
-      var password = document.getElementById('inputPassword4').value;
-      var passwordValidation = document.getElementById('inputPassword5').value;
-      var PasswordValidationMsg = document.getElementById('PasswordValidationMsg');
-
-      if (password !== passwordValidation) {
-        PasswordValidationMsg.textContent = "Passwords do not match";
-        return false;
-      } else {
-        PasswordValidationMsg.textContent = "";
-        return true;
-      }
-    }
-
-    // Function to handle form submission
-function submitForm(event) {
-  event.preventDefault(); // Prevent the default form submission
-
-  // Check if the emails and passwords are valid before proceeding with form submission
-  if (validateEmail() && validatePassword()) {
-    var email = document.getElementById('Email').value;
-
-    // Check email availability before submitting the form
-    checkEmailAvailability(email, function(isAvailable) {
-      if (isAvailable) {
-        // Email is available, proceed with form submission
-        var form = document.getElementById('signup-form');
-        var formData = new FormData(form);
-
-        // Make an AJAX request to submit the form data
-        var xhr = new XMLHttpRequest();
-        xhr.open(form.method, form.action, true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            // Form submitted successfully
-            window.location.href = "index.php";
-          } else if (xhr.readyState === 4) {
-            // Error occurred during form submission
-            console.error(xhr.responseText);
-          }
-        };
-        xhr.send(formData);
-      } else {
-        // Email already exists, display an error message
-        var emailValidationMsg = document.getElementById('emailValidationMsg');
-        emailValidationMsg.textContent = "Email already exists. Please choose a different email.";
-      }
+      callback(isAvailable);
     });
   }
-}
+    function validateEmail() {
+    var email = document.getElementById('Email').value;
+    var emailValidation = document.getElementById('inputEmail6').value;
+    var emailValidationMsg = document.getElementById('emailValidationMsg');
 
+    // Check if the emails match
+    if (email !== emailValidation) {
+      emailValidationMsg.textContent = "Emails do not match";
+      return false;
+    } else {
+      emailValidationMsg.textContent = "";
+      return true;
+    }
+  }
 
-    // Add event listener to the form submit button
-    var submitButton = document.querySelector('button[type="submit"]');
-    submitButton.addEventListener('click', submitForm);
+   
+// Function to handle email availability check
+function checkEmailAvailability(email, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "check_email.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var emailInDBMsg = document.getElementById('emailInDBMsg');
+        document.getElementById('Email').dataset.available = xhr.responseText.trim();
+
+        // Call the callback function with the result
+        callback(xhr.responseText.trim() === "true");
+      } else if (xhr.readyState === 4) {
+        console.error(xhr.responseText);
+
+        // Call the callback function with the result as false in case of an error
+        callback(false);
+      }
+    };
+    xhr.send("Email=" + email);
+  }
+
+    // Function to validate password fields
+  function validatePassword() {
+    var password = document.getElementById('inputPassword4').value;
+    var passwordValidation = document.getElementById('inputPassword5').value;
+    var passwordValidationMsg = document.getElementById('PasswordValidationMsg');
+
+    if (password !== passwordValidation) {
+      passwordValidationMsg.textContent = "Passwords do not match";
+      return false;
+    } else {
+      passwordValidationMsg.textContent = "";
+      return true;
+    }
+  }
+
+    // Function to handle form submission
+    function submitForm(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var checkboxMsg = document.getElementById('checkboxMsg');
+    // Check if the checkbox is checked
+    var checkbox = document.getElementById('invalidCheck2');
+      if (!checkbox.checked) {
+        checkboxMsg.textContent ="<br>נא לאשר את תנאי השימוש";
+        return; // Stop form submission
+  }
+    // Perform basic form validation
+    var first_name = document.getElementById('First_Name').value;
+    var last_name = document.getElementById('Last_Name').value;
+    var email = document.getElementById('Email').value;
+    var email_validation = document.getElementById('inputEmail6').value;
+    var password = document.getElementById('inputPassword4').value;
+    var password_validation = document.getElementById('inputPassword5').value;
+
+    var errors = [];
+
+    if (first_name.trim() === '') {
+      errors.push("First name is required");
+    }
+
+    if (last_name.trim() === '') {
+      errors.push("Last name is required");
+    }
+
+    if (email.trim() === '') {
+      errors.push("Email name is required");
+    } else if (!validateEmail()) {
+      errors.push("Invalid email format");
+    } else if (email !== email_validation) {
+      errors.push("Emails do not match");
+    }
+
+    if (password.trim() === '') {
+      errors.push("Password is required");
+    } else if (password !== password_validation) {
+      errors.push("Passwords do not match");
+    }
+
+    // If there are validation errors, display them to the user
+    if (errors.length > 0) {
+      var errorString = errors.join("\n");
+     // alert(errorString);
+    } else {
+      // Validation passed, proceed with inserting data into the database
+      var form = document.getElementById('signup-form');
+      var formData = new FormData(form);
+
+      // Make an AJAX request to submit the form data
+      var xhr = new XMLHttpRequest();
+      xhr.open(form.method, form.action, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // Form submitted successfully
+          window.location.href = "index.php";
+        } else if (xhr.readyState === 4) {
+          // Error occurred during form submission
+          console.error(xhr.responseText);
+        }
+      };
+      xhr.send(formData);
+    }
+  }
+
+  // Add event listener to the email field's oninput event
+  var emailField = document.getElementById('Email');
+  emailField.addEventListener('input', EmailInDB);
+
+  // Add event listener to the form submit button
+  var submitButton = document.querySelector('button[type="submit"]');
+  submitButton.addEventListener('click', submitForm);
   </script>
   <script src="add_bootstrap.js"></script>
   <script>

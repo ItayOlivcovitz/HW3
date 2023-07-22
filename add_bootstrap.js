@@ -27,7 +27,8 @@ function createNavbar() {
             <a class="nav-link active" aria-current="page" href="index.php">דף התחברות</a>
           </li>
           <li class="nav-item notdissabled">
-            <a class="nav-link text-primary-emphasis" aria-current="page" href="signup.php">הרשמה</a>
+            <!-- Change this line to link to sign_up.php -->
+            <a class="nav-link text-primary-emphasis" aria-current="page" href="sign_up.php">הרשמה</a>
           </li>
         </ul>
         <form class="d-flex" role="search">
@@ -39,6 +40,7 @@ function createNavbar() {
 
   document.body.prepend(navbar);
 }
+
 
 function createLoggedNavbar() {
   const navbar = document.createElement('nav');

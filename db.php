@@ -28,6 +28,7 @@ $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
     `Last Name` VARCHAR(999) NOT NULL,
     `Email` VARCHAR(999) NOT NULL,
     `Password` VARCHAR(999) NOT NULL,
+    `restorekey` VARCHAR(255),
     PRIMARY KEY (`Id`)
 ) ENGINE = InnoDB";
 

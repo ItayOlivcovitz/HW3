@@ -84,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <button type="reset" class="btn border-2 btn-danger col-5">נקה טופס</button>
                             </div>
                             <div class="row justify-content-center col-11">
-                                <button id="signup" type="submit" class="btn border-2 btn-outline-dark mt-2 ms-4 ms-md-0 me-5 me-md-0 mb-1 mb-sm-0 mt-md-4" onclick="window.location.href='signup.php'">הרשמה</button>
+                                <button id="signup" type="submit" class="btn border-2 btn-outline-dark mt-2 ms-4 ms-md-0 me-5 me-md-0 mb-1 mb-sm-0 mt-md-4" onclick="window.location.href='sign_up.php'">הרשמה</button>
+                                <button id="forgot_password" type="submit" class="btn border-2 btn-outline-dark mt-2 ms-4 ms-md-0 me-5 me-md-0 mb-1 mb-sm-0 mt-md-4" onclick="window.location.href='forgot_password.php'">שכחת סיסמא?</button>
                             </div>
                         </div>
                     </form>

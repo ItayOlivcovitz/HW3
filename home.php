@@ -9,8 +9,6 @@ if (!isset($_COOKIE['Email'])) {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 
@@ -51,30 +49,30 @@ if (!isset($_COOKIE['Email'])) {
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" dir="rtl">
       <div class="modal-dialog" dir="rtl">
         <div class="modal-content" dir="rtl">
-          <div dir="rtl" class="modal-header">
+          <div dir="rtl" class="modal-header bg-info bg-opacity-75">
             <div class="row">
               <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-              <h5 dir="rtl" class="modal-title ">יצירת רשימה חדשה</h5>
+              <h5 dir="rtl" class="modal-title text-info-emphasis">יצירת רשימה חדשה</h5>
             </div>
           </div>
-          <div class="modal-body">
+          <div class="modal-body bg-info bg-opacity-25">
             <form id="create-list-form" action="create_list.php" method="post">
               <div class="mb-3">
-                <label for="list_description" class="col-form-label">שם הרשימה:</label>
+                <label for="list_description" class="col-form-label text-info-emphasis">שם הרשימה:</label>
                 <input type="text" class="form-control" id="list_description">
               </div>
               <div class="mb-3">
-                <label for="autocomplete-input" class="col-form-label">משתמשים שותפים</label>
+                <label for="autocomplete-input" class="col-form-label text-info-emphasis">משתמשים שותפים:</label>
                 <input type="text" id="autocomplete-input" class="form-control">
                 <input type="hidden" id="selected-users" name="selected-users">
               </div>
-              <div id="selected-users-container"> משתמשים שנבחרו: </div>
-              <ul id="autocomplete-dropdown" class="ui-autocomplete"></ul>
+              <div id="selected-users-container" class="text-info-emphasis"> משתמשים שנבחרו: </div>
+              <ul id="autocomplete-dropdown" class="ui-autocomplete "></ul>
             </form>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">סגור</button>
-            <button type="submit" class="btn btn-primary" form="create-list-form">צור רשימה חדשה</button>
+          <div class="modal-footer bg-info bg-opacity-50">
+            <button id="closeListModalButton" type="button" class="btn btn-outline-secondary border-3" style="font-size: 16px; font-weight: bold;" data-bs-dismiss="modal">סגור</button>
+            <button type="submit" class="btn btn-outline-primary border-3" style="font-size: 16px; font-weight: bold;" form="create-list-form">צור רשימה חדשה</button>
           </div>
         </div>
       </div>
@@ -91,6 +89,50 @@ if (!isset($_COOKIE['Email'])) {
         $usernames[] = $user_email;
       }
       ?>
+
+      function fetchCurrentUserEmailInfo() {
+        $.ajax({
+          type: "GET",
+          url: "get_user_info.php", // PHP file to fetch the user info
+          data: {
+            email: "<?php echo $user_email; ?>"
+          },
+          dataType: "json",
+          success: function(response) {
+            // Clear the selectedUsersArray before appending the user info
+            selectedUsersArray = [];
+
+            // Append the user info to the selectedUsersArray
+            if (response.user_info) {
+              selectedUsersArray.push(response.user_info);
+            }
+
+            // Update the hidden input value and display the selected users
+            $("#selected-users").val(JSON.stringify(selectedUsersArray)); // Convert to JSON string
+            displaySelectedUsers(selectedUsersArray);
+          },
+          error: function(xhr, status, error) {
+            console.error(error);
+          }
+        });
+      }
+      $('#closeListModalButton').click(function() {
+        // Clear the form fields
+        $("#list_description").val("");
+        $("#autocomplete-input").val("");
+
+        // Clear the selectedUsersArray
+        selectedUsersArray = [];
+
+        // Clear the display of selected users
+        $("#selected-users-container").html("משתמשים שנבחרו:");
+
+        // Update the hidden input value
+        $("#selected-users").val("");
+
+        // Call the function to fetch the current user's email information
+        fetchCurrentUserEmailInfo();
+      });
 
       function fetchLists() {
 
@@ -138,31 +180,17 @@ if (!isset($_COOKIE['Email'])) {
       fetchLists();
 
       var selectedUsersArray = []; // Array to store selected users
-      function fetchCurrentUserEmailInfo() {
-        $.ajax({
-          type: "GET",
-          url: "get_user_info.php", // PHP file to fetch the user info
-          data: {
-            email: "<?php echo $user_email; ?>"
-          },
-          dataType: "json",
-          success: function(response) {
-            // Append the user info to the selectedUsers array
-            if (response.user_info) {
-              selectedUsersArray.push(response.user_info);
-            }
-            // Update the hidden input value and display the selected users
-            $("#selected-users").val(JSON.stringify(selectedUsersArray)); // Convert to JSON string
-            displaySelectedUsers(selectedUsersArray);
-          },
-          error: function(xhr, status, error) {
-            console.error(error);
-          }
-        });
+
+      function displaySelectedUsers(users) {
+        var container = $("#selected-users-container");
+        container.html("משתמשים שנבחרו: <br>" + users.join("<br>"));
       }
+
+
 
       // Call the function to fetch the current user's email information
       fetchCurrentUserEmailInfo();
+
       $("#autocomplete-input").autocomplete({
         source: <?php echo json_encode($usernames); ?>,
         appendTo: "#autocomplete-dropdown",
@@ -182,13 +210,6 @@ if (!isset($_COOKIE['Email'])) {
           }
         }
       });
-
-      // Function to update the display of selected users
-      function displaySelectedUsers(users) {
-        var container = $("#selected-users-container");
-        container.html("משתמשים שנבחרו: <br>" + users.join("<br>"));
-      }
-
 
       // Handle form submission
       $("#create-list-form").submit(function(event) {
@@ -228,6 +249,7 @@ if (!isset($_COOKIE['Email'])) {
           }
         });
       });
+
     });
   </script>
 
@@ -240,6 +262,7 @@ if (!isset($_COOKIE['Email'])) {
       });
     }
   </script>
+
   <script src="add_bootstrap.js"></script>
   <script>
     window.onload = function() {
@@ -247,6 +270,7 @@ if (!isset($_COOKIE['Email'])) {
       createLoggedFooter();
     };
   </script>
+
   <script>
     document.getElementById("new_list").addEventListener("click", function() {
       // Show the modal when the button is clicked
@@ -254,6 +278,7 @@ if (!isset($_COOKIE['Email'])) {
       myModal.show();
     });
   </script>
+
 </body>
 
 </html>

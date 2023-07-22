@@ -4,7 +4,7 @@
       var emailValue = $(this).val();
       if (emailValue.trim() !== '') {
         $.ajax({
-          "url": "check_email_for _restore.php",
+          "url": "check_email_for_restore.php",
           "type": "get",
           "dataType": "json",
           "data": { email: emailValue },

@@ -34,5 +34,18 @@ if (isset($_GET['listID'])) {
         $tasks[] = $row;
     }
 } else {
-    // Handle case when listID is not provided in the URL
+}
+
+function getUserFullNameByEmail($email)
+{
+    global $conn;
+    $sql = "SELECT CONCAT(`First Name`, ' ', `Last Name`) AS full_name FROM `users` WHERE `Email` = '$email'";
+    $result = $conn->query($sql);
+
+    if (!$result || $result->num_rows === 0) {
+        return "Unknown User";
+    }
+
+    $row = $result->fetch_assoc();
+    return $row['full_name'];
 }

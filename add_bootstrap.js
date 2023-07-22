@@ -57,9 +57,6 @@ function createLoggedNavbar() {
           <li class="nav-item notdissabled">
             <a class="nav-link active" aria-current="page" href="home.php">הרשימות שלי</a>
           </li>
-          <li class="nav-item notdissabled">
-            <a class="nav-link active" aria-current="page" href="list.php">רשימה לדוגמא</a>
-          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle disabled" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> המשימות שלי </a>
             <ul class="dropdown-menu bg-info-subtle">

@@ -1,13 +1,10 @@
 <?php
 require_once("db.php");
-
-// Check if Cookie exists and if so go to home.php
 if (isset($_COOKIE['Email'])) {
     header("Location: home.php");
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the submitted values
     $email = $_POST['Email'];
     $password = $_POST['Password'];
     $sql = "SELECT * FROM users";
@@ -18,13 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 session_start();
                 $_SESSION['name'] = $row['Email'];
                 $email = $_POST['Email'];
-
                 if (isset($_POST['gridCheck1'])) {
-                    // 30 days
-                    $expiration = time() + (30 * 24 * 60 * 60); // 30 days * 24 hours * 60 minutes * 60 seconds
+                    $expiration = time() + (30 * 24 * 60 * 60);
                     setcookie('Email', $_POST["Email"], $expiration, '/');
                 }
-
                 $_SESSION['logout'] = true;
                 header("Location: home.php");
                 exit;
@@ -34,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 
@@ -91,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </form>
                 </div>
                 <div class="col-md-6 mb-3 col-12 order-md-2 mt-3">
-                    <img src="task.png" alt="taskmaster" class="img-fluid">
+                    <img src="utils/task.png" alt="taskmaster" class="img-fluid">
                 </div>
             </div>
         </div>

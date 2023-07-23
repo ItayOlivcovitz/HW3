@@ -8,8 +8,8 @@ if (!isset($_COOKIE['Email'])) {
 }
 
 require_once("db.php");
-require_once("get_task_users.php");
-require_once("query_tasks.php");
+require_once("queries/get_task_users.php");
+require_once("queries/query_tasks.php");
 $userFullName = getUserFullNameByEmail($_SESSION['name']);
 function getUserNameByID($userID)
 {
@@ -52,13 +52,11 @@ function getUserNameByID($userID)
   </style>
 
   <script>
-    // Function to move row to the bottom of the table
     function moveRowToBottom(row) {
       var table = row.closest('table');
       row.appendTo(table.find('tbody'));
     }
 
-    // Function to move row to the top of the table
     function moveRowToTop(row) {
       var table = row.closest('table');
       row.prependTo(table.find('tbody'));
@@ -80,10 +78,7 @@ function getUserNameByID($userID)
   <script>
     jQuery(document).ready(function($) {
       <?php
-      // Fetch the listID from GET method
       $listID = $_GET['listID'] ?? 0;
-
-      // Fetch usernames based on listID and userEmail
       $usernames = fetchTaskUsernamesByListID($listID, $_SESSION['name']);
       ?>
 
@@ -97,10 +92,7 @@ function getUserNameByID($userID)
   <script>
     $(document).ready(function() {
       <?php
-      // Fetch the listID from GET method
       $listID = $_GET['listID'] ?? 0;
-
-      // Fetch usernames based on listID and userEmail
       $usernames = fetchTaskUsernamesByListID($listID, $_SESSION['name']);
       ?>
 
@@ -109,7 +101,6 @@ function getUserNameByID($userID)
         source: usernames,
       }).autocomplete("widget").addClass("custom-autocomplete");
 
-      // Add the following script block to handle checkbox and row click events
       $('.table tbody input[type="checkbox"]').on('change', function() {
         var taskID = $(this).closest('tr').data('taskid');
         var isDone = $(this).is(':checked') ? 1 : 0;
@@ -126,7 +117,7 @@ function getUserNameByID($userID)
       function updateTaskStatus(taskID, isDone) {
         $.ajax({
           type: "POST",
-          url: "update_task_status.php",
+          url: "queries/update_task_status.php",
           data: {
             listID: <?php echo $listID; ?>,
             taskID: taskID,
@@ -140,8 +131,6 @@ function getUserNameByID($userID)
           }
         });
       }
-
-      // ... Your existing scripts and closing body tag ...
     });
   </script>
 
@@ -164,7 +153,7 @@ function getUserNameByID($userID)
               </div>
             </div>
             <div class="modal-body bg-info bg-opacity-25">
-              <form id="create-task-form" action="create_task.php?listID=<?php echo $listID; ?>" method="post">
+              <form id="create-task-form" action="queries/create_task.php?listID=<?php echo $listID; ?>" method="post">
                 <div class="mb-3">
                   <label for="task_description" class="col-form-label text-info-emphasis">שם המשימה:</label>
                   <input type="text" class="form-control" id="task_description" name="task_description" required>
@@ -271,7 +260,6 @@ function getUserNameByID($userID)
         }
       });
 
-      // Check if row has 'strikethrough' class and update the checkbox accordingly
       $('.table tbody tr').each(function() {
         var checkbox = $(this).find('input[type="checkbox"]');
         var isStrikethrough = $(this).hasClass('strikethrough');
@@ -281,19 +269,17 @@ function getUserNameByID($userID)
           moveRowToBottom($(this));
         }
       });
-      // Function to move row to the bottom of the table
+
       function moveRowToTop(row) {
         var table = row.closest('table');
         row.prependTo(table.find('tbody'));
       }
 
-      // Function to move row to the top of the table
       function moveRowToBottom(row) {
         var table = row.closest('table');
         row.appendTo(table.find('tbody'));
       }
 
-      // Function to update row numbers
       function updateRowNumbers() {
         var rowCount = 1;
         $('.table tbody tr').each(function(index) {
@@ -326,15 +312,14 @@ function getUserNameByID($userID)
     function deleteTask(taskID, listID) {
       $.ajax({
         type: "POST",
-        url: "delete_task.php",
+        url: "queries/delete_task.php",
         data: {
           taskID: taskID,
           listID: listID
         },
         success: function(response) {
-          // Find the corresponding row using the data-taskid attribute and remove it
           $(`#task-table tr[data-taskid="${taskID}"]`).fadeOut(500, function() {
-            $(this).remove(); // Remove the row after fading out
+            $(this).remove();
           });
         },
         error: function() {
@@ -344,74 +329,101 @@ function getUserNameByID($userID)
     }
   </script>
   <script>
+    function getUserFullNameFromEmail(email) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "queries/get_user_fullname.php",
+          data: {
+            email: email
+          },
+          dataType: "json",
+          success: function(response) {
+            if (response && response.fullname) {
+              resolve(response.fullname);
+            } else {
+              reject("Full name not found");
+            }
+          },
+          error: function() {
+            reject("Error fetching user's full name");
+          }
+        });
+      });
+    }
+
     function addTaskToList(task, listID) {
-      var newRow = $('<tr class="clickable">').attr('data-taskid', task.taskID);
-      newRow.append($('<th scope="row">').text(task.taskID)); // Empty row number for now
-      newRow.append($('<td>').text(task.taskDescription));
-      newRow.append($('<td>').text(task.creationDate));
-      newRow.append($('<td>').text(task.userFullName)); // Add the user's full name to the table row
-      newRow.append($('<td>').append($('<input class="form-check-input">').attr({
-        'type': 'checkbox',
-        'checked': task.done
-      })));
-      newRow.append($('<td>').append($('<button>').addClass('btn btn-outline-danger border-3 btn-sm')
-        .css({
-          'font-size': '13px',
-          'font-weight': 'bold'
-        }).text('מחיקה').click(function() {
-          confirmDelete(task.taskID, listID);
-        })));
+      var currentUserEmail = '<?php echo $_SESSION['name']; ?>';
+      getUserFullNameFromEmail(currentUserEmail)
+        .then((currentUserFullName) => {
+          var [currentUserFirstName, currentUserLastName] = currentUserFullName.split(" ", 2);
+          if (task.userFullName === (currentUserFirstName + " " + currentUserLastName)) {
+            var newRow = $('<tr class="clickable">').attr('data-taskid', task.taskID);
+            newRow.append($('<th scope="row">').text(task.taskID)); // Empty row number for now
+            newRow.append($('<td>').text(task.taskDescription));
+            newRow.append($('<td>').text(task.creationDate));
+            newRow.append($('<td>').text(task.userFullName)); // Add the user's full name to the table row
+            newRow.append($('<td>').append($('<input class="form-check-input">').attr({
+              'type': 'checkbox',
+              'checked': task.done
+            })));
+            newRow.append($('<td>').append($('<button>').addClass('btn btn-outline-danger border-3 btn-sm')
+              .css({
+                'font-size': '13px',
+                'font-weight': 'bold'
+              }).text('מחיקה').click(function() {
+                confirmDelete(task.taskID, listID);
+              })));
 
-      // Append the new row to the table
-      $('#task-table tbody').append(newRow);
+            $('#task-table tbody').append(newRow);
 
-      // Add event listeners to the new row
-      newRow.find('input[type="checkbox"]').on('change', function() {
-        var tableRow = $(this).closest('tr');
+            newRow.find('input[type="checkbox"]').on('change', function() {
+              var tableRow = $(this).closest('tr');
 
-        if ($(this).is(':checked')) {
-          tableRow.addClass('strikethrough');
-          moveRowToBottom(tableRow);
-          updateRowNumbers();
-        } else {
-          tableRow.removeClass('strikethrough');
-          moveRowToTop(tableRow);
-          updateRowNumbers();
-        }
-      });
+              if ($(this).is(':checked')) {
+                tableRow.addClass('strikethrough');
+                moveRowToBottom(tableRow);
+                updateRowNumbers();
+              } else {
+                tableRow.removeClass('strikethrough');
+                moveRowToTop(tableRow);
+                updateRowNumbers();
+              }
+            });
 
-      newRow.on('click', function() {
-        var checkbox = $(this).find('input[type="checkbox"]');
-        var isStrikethrough = $(this).hasClass('strikethrough');
+            newRow.on('click', function() {
+              var checkbox = $(this).find('input[type="checkbox"]');
+              var isStrikethrough = $(this).hasClass('strikethrough');
 
-        checkbox.prop('checked', !isStrikethrough);
-        $(this).toggleClass('strikethrough', !isStrikethrough);
+              checkbox.prop('checked', !isStrikethrough);
+              $(this).toggleClass('strikethrough', !isStrikethrough);
 
-        if (isStrikethrough) {
-          moveRowToTop($(this));
-          updateRowNumbers();
-        } else {
-          moveRowToBottom($(this));
-          updateRowNumbers();
-        }
-      });
+              if (isStrikethrough) {
+                moveRowToTop($(this));
+                updateRowNumbers();
+              } else {
+                moveRowToBottom($(this));
+                updateRowNumbers();
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   </script>
   <script>
     function updateList() {
-      // Make an AJAX request to fetch the updated list data
       $.ajax({
         type: "GET",
-        url: "query_tasks.php",
+        url: "queries/query_tasks.php",
         data: {
           listID: <?php echo $listID; ?>
         },
-        dataType: "json", // Set the expected response data type to JSON
+        dataType: "json",
         success: function(tasks) {
-          // Clear the existing table rows
           $(".table tbody").empty();
-
-          // Add each task to the list
           tasks.forEach(function(task) {
             addTaskToList(task);
           });
@@ -425,24 +437,18 @@ function getUserNameByID($userID)
   <script>
     $(document).ready(function() {
       $('#create-task-form').submit(function(event) {
-        event.preventDefault(); // Prevent the default form submission behavior
-
-        // Serialize the form data
+        event.preventDefault();
         var formData = $(this).serialize();
-
-        // Make an AJAX request to create the new task
         $.ajax({
           type: "POST",
           url: $(this).attr('action'),
           data: formData,
-          dataType: "json", // Set the expected response data type to JSON
+          dataType: "json",
           success: function(response) {
-            // Clear the form fields
             $("#task_description").val("");
             $("#autocomplete-input-tasks").val("");
             $('#addTask').modal('hide');
-            // Add the new task to the list
-            addTaskToList(response, <?php echo $listID; ?>); // Pass the listID as an argument
+            addTaskToList(response, <?php echo $listID; ?>);
           },
           error: function() {
             alert("An error occurred while creating the task. Please try again later.");
@@ -450,7 +456,6 @@ function getUserNameByID($userID)
         });
       });
       $('#closeModalButton').click(function() {
-        // Clear the form fields
         $("#task_description").val("");
         $("#autocomplete-input-tasks").val("");
       });

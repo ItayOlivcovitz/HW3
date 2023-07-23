@@ -12,6 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['email'])) {
     $response = array('user_info' => $row['user_info']);
     echo json_encode($response);
   } else {
-    echo json_encode(array()); // Return an empty response if no user info is found
+    echo json_encode(array());
   }
 }

@@ -24,5 +24,5 @@ if ($result) {
     }
     echo json_encode($lists);
 } else {
-    echo json_encode(array()); // Return an empty array if no lists are found
+    echo json_encode(array());
 }

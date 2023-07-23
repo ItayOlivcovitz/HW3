@@ -8,5 +8,3 @@ setcookie('Email', '', $expiration, '/');
 unset($_COOKIE['Email']);
 header("Location: index.php");
 exit;
-
-// Set the cookie expiration time to a time in the past (e.g., one hour ago)

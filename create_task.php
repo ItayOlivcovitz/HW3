@@ -1,14 +1,11 @@
 <?php
 session_start();
-
 if (!isset($_COOKIE['Email'])) {
     if (!isset($_SESSION['name'])) {
         header("Location: index.php");
     }
 }
-
 require_once("db.php");
-
 function getUserIDByEmail($email)
 {
     global $conn;
@@ -18,7 +15,7 @@ function getUserIDByEmail($email)
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 0) {
-        return null; // Email not found in the database
+        return null;
     }
     $row = $result->fetch_assoc();
     return $row["Id"];
@@ -35,13 +32,13 @@ function getLoggedInUserID()
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows === 0) {
-            return null; // Email not found in the database
+            return null;
         }
         $row = $result->fetch_assoc();
         return $row['Id'];
     }
 
-    return null; // User not logged in
+    return null;
 }
 
 function getHighestTaskID($listID)
@@ -54,10 +51,10 @@ function getHighestTaskID($listID)
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 0) {
-        return 1; // No tasks for the given listID, start with taskID = 1
+        return 1;
     }
     $row = $result->fetch_assoc();
-    return intval($row["maxTaskID"]) + 1; // Increment the highest taskID by 1
+    return intval($row["maxTaskID"]) + 1;
 }
 
 function getUserFullNameByID($userID)
@@ -69,12 +66,11 @@ function getUserFullNameByID($userID)
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows === 0) {
-        return null; // User not found in the database
+        return null;
     }
     $row = $result->fetch_assoc();
     return $row["full_name"];
 }
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["task_description"]) && isset($_POST["user_responsible"])) {
         $taskDescription = $_POST["task_description"];
@@ -82,13 +78,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $listID = $_GET["listID"] ?? 0;
         $creationDate = date("Y-m-d");
         $userResponsibleID = getUserIDByEmail($userResponsibleEmail);
-        // Check if $userResponsibleID is null or empty, then use the logged-in user's ID
         if (!$userResponsibleID) {
             $userResponsibleID = getLoggedInUserID();
         }
         if ($userResponsibleID !== null) {
             global $conn, $tableName;
-            $newTaskID = getHighestTaskID($listID); // Get the new taskID based on the highest taskID for the given listID
+            $newTaskID = getHighestTaskID($listID);
             $sql = "INSERT INTO `$tableName` (`listID`, `taskID`, `taskDescription`, `creationDate`, `userID`, `done`)
                     VALUES (?, ?, ?, ?, ?, FALSE)";
             $stmt = $conn->prepare($sql);
@@ -101,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 'taskDescription' => $taskDescription,
                 'creationDate' => $creationDate,
                 'userID' => $userResponsibleID,
-                'userFullName' => $userFullName, // Add the user's full name to the task data
+                'userFullName' => $userFullName,
                 'done' => false
             );
             echo json_encode($taskData);

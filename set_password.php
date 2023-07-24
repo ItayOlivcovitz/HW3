@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </form>
                 </div>
                 <div class="col-md-6 mb-3 col-12 order-md-2 mt-3">
-                    <img src="utils/forgotPassword.jpg" alt="taskmaster" class="img-fluid">
+                    <img src="forgotPassword.jpg" alt="taskmaster" class="img-fluid">
                 </div>
             </div>
         </div>
